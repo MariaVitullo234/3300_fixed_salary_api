@@ -6,7 +6,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Load model once when the app starts
-model = joblib.load("salary_predict_model.ml")
+model = joblib.load("salary_predict_model_2.ml")
 
 
 @app.route("/")
