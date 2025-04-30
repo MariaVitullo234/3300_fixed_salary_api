@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
@@ -24,13 +24,13 @@ jobs:
       - name: Create and start virtual environment
         run: |
           python -m venv venv
-          venv\Scripts\activate
+          source venv/bin/activate
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
       - name: Zip artifact for deployment
-        run: Compress-Archive -Path .\* -DestinationPath release.zip
+        run: zip -r release.zip ./*
 
   deploy:
     runs-on: ubuntu-latest
@@ -39,8 +39,8 @@ jobs:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
 
     steps:
       - name: Download artifact from build job
@@ -51,7 +51,6 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
-      
       - name: Login to Azure
         uses: azure/login@v2
         with:
